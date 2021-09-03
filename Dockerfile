@@ -7,5 +7,4 @@ RUN  apt-get update -y && \
      apt-get clean
 RUN apt-get -y install zip
 COPY . /usr/src/resume-1_5_1
-WORKDIR /usr/src/resume-1_5_1/example
-CMD ["bash", "run.sh"]
+WORKDIR /usr/src/resume-1_5_1/src

@@ -10,32 +10,37 @@ done
 export CLASSPATH=fop$FOP_VERSION.jar:$CLASSPATH
 echo $CLASSPATH
 NOWDATE=`date +%Y%m%d`
-CV_TITLE_NAME=ewanharrow-cv
-CV_TITLE=$CV_TITLE_NAME-filtered
+CV_BASE_PATH=../xml
+if [[ -z "${CV_TITLE}" ]]; then
+  CV_TITLE=example1
+fi
+CV_FILE=$CV_BASE_PATH/$CV_TITLE-filtered
 
 # escape & from last run
-sed 's/\&/\&amp;/g' $CV_TITLE.xml >  $CV_TITLE-fixed.xml
-rm $CV_TITLE.xml
-mv $CV_TITLE-fixed.xml $CV_TITLE.xml
+sed 's/\&/\&amp;/g' $CV_FILE.xml >  $CV_FILE-fixed.xml
+rm $CV_FILE.xml
+mv $CV_FILE-fixed.xml $CV_FILE.xml
 
 # run resume creating txt, html and fop versions
-$ANT_HOME/bin/ant -Dresume=$CV_TITLE clean txt html fo
+$ANT_HOME/bin/ant -Dresume=$CV_FILE clean txt html fo
 
-mv $CV_TITLE.txt $CV_TITLE_NAME-$NOWDATE.txt
-mv $CV_TITLE.html $CV_TITLE_NAME-$NOWDATE.html
+mv $CV_FILE.txt $CV_TITLE-$NOWDATE.txt
+mv $CV_FILE.html $CV_TITLE-$NOWDATE.html
 
 # create an rtf version from fo
-java com.xmlmind.fo.converter.Driver $CV_TITLE.fo > $CV_TITLE_NAME-$NOWDATE.rtf
+java com.xmlmind.fo.converter.Driver $CV_FILE.fo > $CV_TITLE-$NOWDATE.rtf
 
 # create an pdf version from fo
-java org.apache.fop.cli.Main -fo $CV_TITLE.fo -pdf $CV_TITLE_NAME-$NOWDATE.pdf
+java org.apache.fop.cli.Main -fo $CV_FILE.fo -pdf $CV_TITLE-$NOWDATE.pdf
 
-rm -rf generated
-mkdir generated
-mv $CV_TITLE_NAME-$NOWDATE.* generated
+OUT_DIR=../generated
+echo "genrated files to be writtem to $OUT_DIR"
+rm -rf $OUT_DIR
+mkdir $OUT_DIR
+mv $CV_TITLE-$NOWDATE.* $OUT_DIR
 
 # zip into archive
-zip generated/$CV_TITLE_NAME-$NOWDATE.zip generated/$CV_TITLE_NAME-$NOWDATE.*
+zip $OUT_DIR/$CV_TITLE-$NOWDATE.zip $OUT_DIR/$CV_TITLE-$NOWDATE.*
 
 # remove old filtered xml
-rm $CV_TITLE.xml
+rm $CV_FILE.xml

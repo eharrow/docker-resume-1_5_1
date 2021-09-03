@@ -1,0 +1,43 @@
+SAX 2.0 r2 prerelease 3
+20-November-2001
+
+This is the third prerelease of a bugfix release for SAX2, the
+second generation of the Simple API for XML.  Changes from
+prerelease 1 (dated 28 December 2000) can be briefly summarized as:
+
+    - Numerous documentation improvements and clarifications.
+    - Bugfixed classes include ParserAdapter, AttributesImpl.
+    - Slightly less memory use in NamespaceSupport, AttributesImpl.
+    - Bundling the "SAX2 Extensions 1.0" distribution.
+    - Factory classes use the correct class loader. 
+    - Better configurability for the default XMLReader.
+
+Changes from prerelease 2 (dated 17 October 2001) include:
+
+    - Further documentation improvements and clarifications
+    - NamespaceSupport enforces its declare-before-use constraint
+    - Revert a DeclHandler change. 
+    - ClassLoader-aware factory code compiles on JDK 1.1
+
+The APIs have not been changed, except that definition of some
+extension handler methods was updated to match behavior of current
+parsers, and that resetting handlers to their default values
+(null) is no longer expected to throw a NullPointerException.
+The earlier prerelease made small API changes:  it added default
+constructors to some exceptions, and it added a missing exception
+declaration in DefaultHandler,
+
+Other than those small changes, this is intended to be a drop-in
+replacement for the previous SAX2 release.  API-conformant code
+will not notice any differences.  Consider this release a beta test,
+ideally the last one before the SAX 2.0r2 release.
+
+For more information, see the current home for SAX on the web:
+
+    http://www.saxproject.org
+
+As a SourceForge project, SAX now has public CVS access, a database
+for bugs and RFEs, mailing lists, and a web site.
+
+- David Brownell
+  dbrownell@users.sourceforge.net

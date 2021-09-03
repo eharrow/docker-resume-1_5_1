@@ -10,7 +10,12 @@ done
 export CLASSPATH=../java/xmlresume-filter.jar:fop$FOP_VERSION.jar:$CLASSPATH
 echo $CLASSPATH
 NOWDATE=`date +%Y%m%d`
-CV_TITLE=ewanharrow-cv
+CV_BASE_PATH=../xml
+if [[ -z "${CV_TITLE}" ]]; then
+  CV_TITLE=example1
+  cp ../example/example1.xml ../xml
+fi
+CV_FILE=$CV_BASE_PATH/$CV_TITLE
 
 # run resume applying a filter so that targets without it are not generated
 echo "run resume applying a filter for 'full-address'"

@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>XP</title>
+  </head>
+  <body>
+    <p>This is XP version 0.5, an XML Parser in Java by James Clark, <em>plus</em>
+    <code>com.jclark.xml.sax.SAX2Driver</code>, a SAX 2.0 implemented on top
+    of <code>com.jclark.xml.parse</code> by Hussein Shafie (<a
+    href="mailto:hussein@pixware.fr">hussein@pixware.fr</a>):</p>
+    <ul>
+      <li>Most <code>com.jclark.xml.sax.SAX2Driver</code> code is stolen from
+      James Clark&#39;s original SAX 1.0 driver <code>com.jclark.xml.sax.Driver</code>.</li>
+      <li>Namespace support is implemented using David Megginson&#39;s
+      <code>org.xml.sax.helpers.NamespaceSupport</code> class.</li>
+      <li>SAX2Driver supports SAX2 extensions LexicalHandler and DeclHandler.<p>The
+      sax2.jar included in the distribution contains the <code>org.xml.sax.ext</code>
+      package.</p></li>
+      <li>Integration with Sun <a href="http://java.sun.com/xml/">JAXP</a> 1.1
+      is implemented by the new package <code>com.jclark.xml.jaxp</code>.<p>If
+      your Java runtime does not recognize the xp.jar entry<code>
+      services/javax.xml.parsers.SAXParserFactory </code>pointing to
+      <code>com.jclark.xml.jaxp.SAXParserFactoryImpl</code>, do not forget
+      that you can force JAXP to use XP as your parser by setting the
+      following Java property in your application:</p><pre>-Djavax.xml.parsers.SAXParserFactory=com.jclark.xml.jaxp.SAXParserFactoryImpl</pre></li>
+    </ul>
+    <p>What follows is the text of the original index.html file as written by
+    James Clark.</p>
+    <hr />
+    <h1>XP - an XML Parser in Java</h1>
+    <h2>Version 0.5</h2>
+    <p>Copyright (c) 1997, 1998 James Clark<br />See the file <a
+    href="copying.txt">copying.txt</a> for copying permission.</p>
+    <p>XP is an <a href="http://www.w3.org/TR/1998/REC-xml-19980210">XML 1.0</a>
+    parser written in Java. It is fully conforming: it detects all non
+    well-formed documents. It is currently not a validating XML processor.
+    However it can parse all external entities: external DTD subsets, external
+    parameter entities and external general entities.</p>
+    <p>XP can be downloaded from <a href="ftp://ftp.jclark.com/pub/xml/xp.zip">ftp://ftp.jclark.com/pub/xml/xp.zip</a>.
+    This is a beta-test version.</p>
+    <p>It has the following design goals:</p>
+    <ul>
+      <li>Conformance and correctness. XP is designed to be 100% conformant to
+      the <a href="http://www.w3.org/TR/1998/REC-xml-19980210">XML 1.0
+      specification</a>.</li>
+      <li>High performance. XP aims to be the fastest conformant XML parser in
+      Java.</li>
+      <li>Layered structure. In addition to a normal high-level parser API, XP
+      provides a low-level API that supports the construction of different
+      kinds of XML parser (such as incremental parsers).</li>
+    </ul>
+    <p>A few caveats:</p>
+    <ul>
+      <li>It is not intended to work with JDK 1.0; it relies on JDK 1.1
+      features.</li>
+      <li>It is designed more for applications that applets; thus reducing
+      class file size was given relatively low priority.</li>
+      <li>It is intended more for delivery of documents than for authoring, so
+      error handling is brutal.</li>
+    </ul>
+    <p>XP supports the following encodings:</p>
+    <ul>
+      <li><code>UTF-8</code></li>
+      <li><code>UTF-16</code></li>
+      <li><code>ISO-8859-1</code></li>
+      <li><code>US-ASCII</code></li>
+    </ul>
+    <p>XP consists of the following Java packages:</p>
+    <dl>
+      <dt><code>com.jclark.xml</code></dt>
+      <dd>consists of the interface <code>Version</code> which defines a
+      String constant <code>string</code> specifying the XP version</dd>
+      <dt><code>com.jclark.xml.tok</code></dt>
+      <dd>a low-level API which is designed to support the construction of a
+      wide variety of different kinds of XML parser; the main class is
+      <code>com.jclark.xml.tok.Encoding</code> which represents a possible
+      encoding of a parsed XML entity and provides operations on byte arrays
+      that represent all or part of an entity in that encoding</dd>
+      <dt><code>com.jclark.xml.parse</code></dt>
+      <dd>a parser with a callback style API; this is layered on top of
+      <code>com.jclark.xml.tok</code>. This has three parallel subpackages;
+      you must use <code>com.jclark.xml.parse</code> together with one of the
+      subpackages according to the type of exceptions that your callbacks
+      throw: <dl><dt><code>com.jclark.xml.parse.io</code></dt><dd>use this if
+      your callbacks throw <code>java.io.IOException</code>; this provides the
+      same interface as version 0.2 of XP</dd><dt><code>com.jclark.xml.parse.awt</code></dt><dd>use
+      this if your callbacks throw <code>java.awt.AWTException</code></dd><dt><code>com.jclark.xml.parse.base</code></dt><dd>use
+      this if your callbacks throw some other kind of exception; alternatively
+      you can copy and modify the code that implements <code>com.jclark.xml.parser.awt</code>
+      to provide an exception type-safe wrapper for the kind of exception
+      thrown by your callbacks</dd></dl></dd>
+      <dt><code>com.jclark.xml.sax</code></dt>
+      <dd>a <a href="http://www.megginson.com/SAX/">SAX</a> 1.0 driver
+      implemented on top of <code>com.jclark.xml.parse</code></dd>
+      <dt><code>com.jclark.xml.output</code></dt>
+      <dd>support for XML output; this builds on top of the JDK 1.1 Writer
+      class</dd>
+      <dt><code>com.jclark.xml.apps</code></dt>
+      <dd>some simple example applications; <code>Time</code> which reports
+      the time taken to parse XML documents; <code>Normalize</code> which
+      outputs a normalized form of XML</dd>
+    </dl>
+    <p>See the <a href="api/packages.html">XP API</a> documentation (generated
+    by javadoc) for details.</p>
+    <address><a href="mailto:jjc@jclark.com">James Clark</a></address>
+  </body>
+</html>

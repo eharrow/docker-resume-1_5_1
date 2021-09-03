@@ -1,7 +1,2 @@
-apache-ant-1.9.4/
-doc/
-java/
-lib/
-xsl/
-css
-dtd
+xml
+generated
