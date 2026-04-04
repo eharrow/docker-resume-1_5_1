@@ -1,6 +1,6 @@
 #!/bin/bash
 # Maven-based resume generation script for Java 21 + Xalan 2.7.3 + FOP 2.9
-# Supports: HTML, PDF, and TXT output formats
+# Supports: HTML, PDF, RTF (via Pandoc), and TXT output formats
 # Usage: ./run-maven.sh [CV_TITLE] [COUNTRY] [PAPERSIZE]
 
 set -e
@@ -107,12 +107,13 @@ fi
 echo ""
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Step 3/4: Generating PDF via XSL-FO intermediate format..."
+echo "Step 3/5: Generating PDF via XSL-FO intermediate format..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 FO_XSL="../xsl/output/${OUTPUT_FORMAT}.xsl"
 FO_FILE="$CV_TITLE.fo"
 PDF_FILE="../generated/$CV_TITLE.pdf"
+RTF_FILE="../generated/$CV_TITLE.rtf"
 
 if [ ! -f "$FO_XSL" ]; then
     echo "❌ Error: XSL-FO stylesheet not found: $FO_XSL"
@@ -146,12 +147,33 @@ else
     exit 1
 fi
 
-# Clean up intermediate FO file
-rm -f "$FO_FILE"
+# Step 3c: Optionally generate RTF from HTML using Pandoc (if available)
+echo "  3c. Attempting RTF generation from HTML using Pandoc..."
+if command -v pandoc &> /dev/null; then
+    HTML_NO_TABLE="../generated/$CV_TITLE-no-table.html"
+    # Strip tables from HTML for better RTF compatibility
+    cp "../generated/$CV_TITLE.html" "$HTML_NO_TABLE" awk 'BEGIN{in_table=0} /<table/{in_table=1; next} /</table>/{in_table=0; next} !in_table{print}' "../generated/$CV_TITLE.html" > "$HTML_NO_TABLE"awk 'BEGIN{in_table=0} /<table/{in_table=1; next} /</table>/{in_table=0; next} !in_table{print}' "../generated/$CV_TITLE.html" > "$HTML_NO_TABLE" sed -i "/<table/,/</table>/d" "$HTML_NO_TABLE"
+    pandoc -f html -t rtf "$HTML_NO_TABLE" -o "$RTF_FILE" 2>/dev/null
+    rm -f "$HTML_NO_TABLE"
+    if [ -f "$RTF_FILE" ]; then
+        echo "✅ RTF generated: generated/$CV_TITLE.rtf (via Pandoc)"
+        ls -lh "$RTF_FILE"
+        echo "   💡 Tip: Open with Pages, Word, or LibreOffice (TextEdit has limited RTF support)"
+    else
+        echo "⚠️  Pandoc RTF conversion failed (continuing without RTF)"
+    fi
+else
+    echo "ℹ️  Pandoc not installed - RTF generation skipped"
+    echo "   To enable RTF: brew install pandoc  (macOS) or apt-get install pandoc (Linux)"
+fi
+
+# Keep FO file available in generated directory for reference
+cp "$FO_FILE" "../generated/$CV_TITLE.fo"
+echo "ℹ️  XSL-FO intermediate format saved: generated/$CV_TITLE.fo"
 echo ""
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Step 4/4: Generating plain text output..."
+echo "Step 4/5: Generating plain text output..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 TXT_XSL="../xsl/output/${COUNTRY}-text.xsl"
