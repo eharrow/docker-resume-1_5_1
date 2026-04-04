@@ -19,7 +19,7 @@ fi
 CV_FILE=$CV_BASE_PATH/$CV_TITLE
 
 # run resume applying a filter so that targets without it are not generated
-echo "run resume applying a filter for 'full-address old-jobs referees'"
+echo "run resume ${CV_FILE} applying a filter for 'full-address old-jobs referees'"
 $ANT_HOME/bin/ant  -Dfilter.targets="full-address old-jobs referees" -Dresume=$CV_TITLE clean filter
 
 # run build to generate from the filtered CV

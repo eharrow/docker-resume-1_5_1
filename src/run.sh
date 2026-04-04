@@ -19,9 +19,10 @@ fi
 CV_FILE=$CV_BASE_PATH/$CV_TITLE
 
 # run resume applying an empty filter so that items with targets are not generated
-echo "run resume applying an empty filter so that items with targets are not generated"
+echo "run resume ${CV_FILE} applying an empty filter so that items with targets are not generated"
 $ANT_HOME/bin/ant  -Dfilter.targets="" -Dresume=$CV_FILE clean filter
 
 # run build to generate from the filtered CV
+
 echo "now generating the filtered CV"
 $PWD/do-generation.sh
